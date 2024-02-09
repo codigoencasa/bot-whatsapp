@@ -12,7 +12,7 @@
     "dependencies": {
         "@bot-whatsapp/bot": "*",
         "@ffmpeg-installer/ffmpeg": "^1.1.0",
-        "axios": "^1.4.0",
+        "axios": "^1.6.0",
         "combine-image": "^1.0.3",
         "fluent-ffmpeg": "^2.1.2",
         "follow-redirects": "^1.15.2",
