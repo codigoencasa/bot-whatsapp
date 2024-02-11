@@ -18,7 +18,7 @@ npm create bot-whatsapp@latest
 
 Entiende más a fondo sus funcionalidades explicadas en nuestra documentación.
 
-- Instalacion
+- Instalación
 - Base de datos
 - Proveedores
 
