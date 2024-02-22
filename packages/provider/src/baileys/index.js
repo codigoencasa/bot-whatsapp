@@ -38,6 +38,7 @@ class BaileysProvider extends ProviderClass {
         gifPlayback: false,
         usePairingCode: false,
         phoneNumber: null,
+        enabledCalls: false,
         useBaileysStore: true,
     }
     vendor
@@ -108,6 +109,39 @@ class BaileysProvider extends ProviderClass {
                     ])
                 }
             }
+            //TODO PERMITE RECHAZAR LLAMADAS - SE GATILLA CUANDO EL BOT RECIBE UNA LLAMADA
+            sock.ev.on('call', async (callEvent) => {
+                // Verificar si la funcionalidad está activada
+                if (!this.globalVendorArgs.enabledCalls) return
+
+                const [callData] = callEvent
+                const { from, id, status } = callData
+
+                if (status !== 'offer') return
+                const instance = {
+                    tag: 'call',
+                    attrs: {
+                        from: sock.user.id,
+                        to: from,
+                        id: sock.generateMessageTag(),
+                    },
+                    content: [
+                        {
+                            tag: 'reject',
+                            attrs: {
+                                'call-id': id,
+                                'call-creator': from,
+                                count: '0',
+                            },
+                            content: undefined,
+                        },
+                    ],
+                }
+                await sock.query(instance);
+                if (callEvent[0].status == 'offer') {
+                        return this.vendor.sendMessage(callEvent[0].from, {text:"¿Me estás llamando? Sólo recuerda, ¡Soy un robot!"})
+                }
+            })
 
             sock.ev.on('connection.update', async (update) => {
                 const { connection, lastDisconnect, qr } = update
