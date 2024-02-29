@@ -19,6 +19,18 @@ Aca encontrarás la documentación en el repositorio oficial de [Baileys](https:
 
 ---
 
+### Baileys:
+### Si deseas prescindir del QR, usa la opción usePairingCode, el cual te enviará un código de emparejamiento a tu número de celular.
+
+```js
+const adapterProvider = createProvider(BaileysProvider, {
+        usePairingCode: true,
+        // tu número de celular con el código de país
+        phoneNumber: process.env.PHONE_NUMBER
+    });
+```
+---using the pairing code option
+
 ## Funciones usando el proveedor Baileys
 
 ### Baileys:
