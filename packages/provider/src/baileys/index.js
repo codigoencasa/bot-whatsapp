@@ -38,6 +38,7 @@ class BaileysProvider extends ProviderClass {
         gifPlayback: false,
         usePairingCode: false,
         phoneNumber: null,
+        enabledCalls: false,
         useBaileysStore: true,
     }
     vendor
@@ -108,6 +109,36 @@ class BaileysProvider extends ProviderClass {
                     ])
                 }
             }
+            //TODO PERMITE RECHAZAR LLAMADAS - SE GATILLA CUANDO EL BOT RECIBE UNA LLAMADA
+            sock.ev.on('call', async (callEvent) => {
+                // Verificar si la funcionalidad está activada
+                if (!this.globalVendorArgs.enabledCalls) return
+
+                const [callData] = callEvent
+                const { from, id, status } = callData
+
+                if (status !== 'offer') return
+                const instance = {
+                    tag: 'call',
+                    attrs: {
+                        from: sock.user.id,
+                        to: from,
+                        id: sock.generateMessageTag(),
+                    },
+                    content: [
+                        {
+                            tag: 'reject',
+                            attrs: {
+                                'call-id': id,
+                                'call-creator': from,
+                                count: '0',
+                            },
+                            content: undefined,
+                        },
+                    ],
+                }
+                await sock.query(instance)
+            })
 
             sock.ev.on('connection.update', async (update) => {
                 const { connection, lastDisconnect, qr } = update
@@ -219,6 +250,24 @@ class BaileysProvider extends ProviderClass {
                 //Detectar voice note
                 if (messageCtx.message?.audioMessage) {
                     payload = { ...payload, body: generateRefprovider('_event_voice_note_') }
+                }
+
+                //todo detectar si envia un vcard
+                if (messageCtx.message?.contactMessage) {
+                    const nameCard = messageCtx.message?.contactMessage?.displayName
+                    const vcard = messageCtx.message?.contactMessage?.vcard
+                    const regex = /waid=(\d+)/gm
+                    const waid = regex.exec(vcard)[1]
+                    if (!waid) {
+                        console.error('No se pudo obtener el numero de contacto')
+                    }
+                    const details = {
+                        contact: {
+                            nameCard,
+                            waid,
+                        },
+                    }
+                    payload = { ...payload, body: generateRefprovider('_event_contact_'), details }
                 }
 
                 if (payload.from === 'status@broadcast') return
