@@ -4,7 +4,7 @@ const pino = require('pino')
 const rimraf = require('rimraf')
 const mime = require('mime-types')
 const { join } = require('path')
-const { createWriteStream, readFileSync, existsSync } = require('fs')
+const { createWriteStream, readFileSync } = require('fs')
 const { Console } = require('console')
 
 const {
@@ -62,12 +62,9 @@ class BaileysProvider extends ProviderClass {
 
         if (this.globalVendorArgs.useBaileysStore) {
             this.store = makeInMemoryStore({ loggerBaileys })
-            this.store.readFromFile(`${NAME_DIR_SESSION}/baileys_store.json`)
+            this.store?.readFromFile(`${NAME_DIR_SESSION}/baileys_store.json`)
             setInterval(() => {
-                const path = `${NAME_DIR_SESSION}/baileys_store.json`
-                if (existsSync(NAME_DIR_SESSION)) {
-                    this.store.writeToFile(path)
-                }
+                this.store?.writeToFile(`${NAME_DIR_SESSION}/baileys_store.json`)
             }, 10_000)
         }
 
