@@ -15,7 +15,7 @@
         "axios": "^1.4.0",
         "combine-image": "^1.0.3",
         "fluent-ffmpeg": "^2.1.2",
-        "follow-redirects": "^1.15.2",
+        "follow-redirects": "^1.15.6",
         "qr-image": "^3.2.0",
         "rimraf": "^3.0.2",
         "sharp": "^0.30.5",
