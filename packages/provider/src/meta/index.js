@@ -8,6 +8,7 @@ const { convertAudio } = require('../utils/convertAudio')
 const MetaWebHookServer = require('./server')
 const URL = `https://graph.facebook.com`
 const Queue = require('queue-promise')
+const path = require('path')
 
 /**
  * ⚙️MetaProvider: Es un provedor que te ofrece enviar
@@ -175,6 +176,46 @@ class MetaProvider extends ProviderClass {
             type: 'video',
             video: {
                 id: mediaId,
+            },
+        }
+        return this.sendMessageMeta(body)
+    }
+
+    /**
+     *
+     * @param {*} number
+     * @param {*} _
+     * @param {*} pathDocument
+     * @returns
+     */
+    sendFile = async (number, pathFile = null) => {
+        if (!pathFile) throw new Error(`MEDIA_INPUT_NULL_: ${pathFile}`)
+
+        const formData = new FormData()
+        const mimeType = mime.lookup(pathFile)
+        formData.append('file', createReadStream(pathFile), {
+            contentType: mimeType,
+        })
+        formData.append('messaging_product', 'whatsapp')
+
+        const nameOriginal = path.basename(pathFile) || 'Doc'
+
+        const {
+            data: { id: mediaId },
+        } = await axios.post(`${URL}/${this.version}/${this.numberId}/media`, formData, {
+            headers: {
+                Authorization: `Bearer ${this.jwtToken}`,
+                ...formData.getHeaders(),
+            },
+        })
+
+        const body = {
+            messaging_product: 'whatsapp',
+            to: number,
+            type: 'document',
+            document: {
+                id: mediaId,
+                filename: nameOriginal,
             },
         }
         return this.sendMessageMeta(body)

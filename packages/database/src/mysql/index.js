@@ -49,9 +49,9 @@ class MyslAdapter {
 
     save = (ctx) => {
         const values = [
-            [ctx.ref, ctx.keyword, ctx.answer, ctx.refSerialize, ctx.from, JSON.stringify(ctx.options), null],
+            [ctx.ref, ctx.keyword, ctx.answer, ctx.refSerialize, ctx.from, JSON.stringify(ctx.options)],
         ]
-        const sql = 'INSERT INTO history (ref, keyword, answer, refSerialize, phone, options, created_at) values ?'
+        const sql = 'INSERT INTO history (ref, keyword, answer, refSerialize, phone, options) values ?'
 
         this.db.query(sql, [values], (err) => {
             if (err) throw err
@@ -68,7 +68,7 @@ class MyslAdapter {
             ref varchar(255) NOT NULL,
             keyword varchar(255) NULL,
             answer longtext NOT NULL,
-            refSerialize varchar(255) NOT NULL,
+            refSerialize varchar(255) NULL,
             phone varchar(255) NOT NULL,
             options longtext NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP) 

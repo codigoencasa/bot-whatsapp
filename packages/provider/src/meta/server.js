@@ -40,6 +40,8 @@ class MetaWebHookServer extends EventEmitter {
             return
         }
 
+        const msg_id = messages[0].id
+
         messages.forEach(async (message) => {
             const [contact] = contacts
             const to = body.entry[0].changes[0].value?.metadata?.display_phone_number
@@ -54,6 +56,7 @@ class MetaWebHookServer extends EventEmitter {
                         to,
                         body: message.text?.body,
                         pushName,
+                        msg_id
                     }
                     break
                 }
@@ -66,6 +69,7 @@ class MetaWebHookServer extends EventEmitter {
                         title_button_reply: message.interactive?.button_reply?.title,
                         title_list_reply: message.interactive?.list_reply?.title,
                         pushName,
+                        msg_id
                     }
                     break
                 }
@@ -78,6 +82,7 @@ class MetaWebHookServer extends EventEmitter {
                         payload: message.button?.payload,
                         title_button_reply: message.button?.payload,
                         pushName,
+                        msg_id
                     }
                     break
                 }
@@ -90,6 +95,7 @@ class MetaWebHookServer extends EventEmitter {
                         to,
                         body: generateRefprovider('_event_media_'),
                         pushName,
+                        msg_id
                     }
                     break
                 }
@@ -107,6 +113,7 @@ class MetaWebHookServer extends EventEmitter {
                         to,
                         body: generateRefprovider('_event_document_'),
                         pushName,
+                        msg_id
                     }
                     break
                 }
@@ -119,6 +126,7 @@ class MetaWebHookServer extends EventEmitter {
                         to,
                         body: generateRefprovider('_event_media_'),
                         pushName,
+                        msg_id
                     }
                     break
                 }
@@ -131,6 +139,7 @@ class MetaWebHookServer extends EventEmitter {
                         longitude: message.location.longitude,
                         body: generateRefprovider('_event_location_'),
                         pushName,
+                        msg_id
                     }
                     break
                 }
@@ -143,6 +152,7 @@ class MetaWebHookServer extends EventEmitter {
                         to,
                         body: generateRefprovider('_event_voice_note_'),
                         pushName,
+                        msg_id
                     }
                     break
                 }
@@ -154,6 +164,7 @@ class MetaWebHookServer extends EventEmitter {
                         id: message.sticker.id,
                         body: generateRefprovider('_event_media_'),
                         pushName,
+                        msg_id
                     }
                     break
                 }
@@ -170,6 +181,7 @@ class MetaWebHookServer extends EventEmitter {
                         to,
                         body: generateRefprovider('_event_contacts_'),
                         pushName,
+                        msg_id
                     }
                     break
                 }
@@ -184,6 +196,7 @@ class MetaWebHookServer extends EventEmitter {
                         },
                         body: generateRefprovider('_event_order_'),
                         pushName,
+                        msg_id
                     }
                     break
                 }

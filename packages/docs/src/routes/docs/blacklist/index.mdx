@@ -13,9 +13,10 @@ createBot({
     flow: adapterFlow,
     provider: adapterProvider,
     database: adapterDB,
-},{
-    blackList:['34XXXXXXXX']
-})
+    extensions: {
+      blackList:['3XXXXXXXXX'],
+    },
+  })
 ```
 
 ## Propiedades

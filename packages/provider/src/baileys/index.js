@@ -33,7 +33,13 @@ const logger = new Console({
  * https://github.com/whiskeysockets/Baileys
  */
 class BaileysProvider extends ProviderClass {
-    globalVendorArgs = { name: `bot`, gifPlayback: false, usePairingCode: false, phoneNumber: null }
+    globalVendorArgs = {
+        name: `bot`,
+        gifPlayback: false,
+        usePairingCode: false,
+        phoneNumber: null,
+        useBaileysStore: true,
+    }
     vendor
     store
     saveCredsGlobal = null
@@ -54,14 +60,16 @@ class BaileysProvider extends ProviderClass {
 
         this.saveCredsGlobal = saveCreds
 
-        this.store = makeInMemoryStore({ loggerBaileys })
-        this.store.readFromFile(`${NAME_DIR_SESSION}/baileys_store.json`)
-        setInterval(() => {
-            const path = `${NAME_DIR_SESSION}/baileys_store.json`
-            if (existsSync(NAME_DIR_SESSION)) {
-                this.store.writeToFile(path)
-            }
-        }, 10_000)
+        if (this.globalVendorArgs.useBaileysStore) {
+            this.store = makeInMemoryStore({ loggerBaileys })
+            this.store.readFromFile(`${NAME_DIR_SESSION}/baileys_store.json`)
+            setInterval(() => {
+                const path = `${NAME_DIR_SESSION}/baileys_store.json`
+                if (existsSync(NAME_DIR_SESSION)) {
+                    this.store.writeToFile(path)
+                }
+            }, 10_000)
+        }
 
         try {
             const sock = makeWASocket({
@@ -245,7 +253,7 @@ class BaileysProvider extends ProviderClass {
                             const [messageCtx] = message
 
                             const messageOriginalKey = messageCtx?.update?.pollUpdates[0]?.pollUpdateMessageKey
-                            const messageOriginal = await this.store.loadMessage(
+                            const messageOriginal = await this.store?.loadMessage(
                                 messageOriginalKey.remoteJid,
                                 messageOriginalKey.id
                             )

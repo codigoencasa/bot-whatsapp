@@ -84,8 +84,10 @@ Dependiendo de tus sistema operativo asegurate de colocar bien la ruta absoluta
 ```js
     const { addKeyword } = require('@bot-whatsapp/bot')
 
+    const path = require('path'); // Importar el módulo 'path' de Node.js para usar esta ruta
+
     const flowString = addKeyword('hola').addAnswer('Este mensaje envia una imagen', {
-            media: 'c:/ruta/imagen.png', //'c:\ruta\imagen.png'
+            media: path.resolve('/ruta/imagen.png'), //'\ruta\imagen.png'
     })
 
 ```
