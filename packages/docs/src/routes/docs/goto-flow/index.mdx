@@ -21,7 +21,13 @@ const flujoUsuariosRegistrados = addKeyword('USUARIOS_REGISTRADOS')
     await flowDynamic(`Como estas ${ejemploDB.name}, un gusto tenerte nuvamente`)
 })
 
-const flujoUsuariosNORegistrados = addKeyword('USUARIOS_NO_REGISTRADOS')
+/**
+   Evita que los flujos intermedios puedan ser invocados por el usuario de manera accidental por el addKeyword:
+   - Agrega un distintivo como: 'USUARIOS_NO_REGISTRADOS'
+   - O puedes generar un strign aleatorio usando uuid
+**/
+
+const flujoUsuariosNoRegistrados = addKeyword('USUARIOS_NO_REGISTRADOS')
 .addAnswer('Veo que es tu primera vez por aqui')
 .addAnswer('¿Cual es tu email?',{capture:true},async(ctx, {flowDynamic, gotoFlow}) => {
 
@@ -50,6 +56,23 @@ const flowBienvenida = addKeyword('hola')
 
 })
 
+/** Todos los flujos deben ser agregados al adapterFlow **/
+
+const flows = [flowBienvenida, flujoUsuariosRegistrados, flujoUsuariosNoRegistrados]
+
+const main = async () => {
+	const adapterDB = new MockAdapter();
+	const adapterFlow = createFlow([...flows, otrosFlows]);
+	const adapterProvider = createProvider(BaileysProvider);
+
+	createBot({
+		flow: adapterFlow,
+		provider: adapterProvider,
+		database: adapterDB,
+	});
+
+	QRPortalWeb();
+};
 
 ```
 
@@ -73,7 +96,7 @@ const flujoUsuariosNORegistrados = addKeyword('USUARIOS_NO_REGISTRADOS')
     console.log('registramos en base de datos el numero...')
 
 
-    /** La importacion del require se hace dentro de la funcion**/
+    /** La importacion del require se hace dentro de la funcion **/
 
     await flowDynamic(`Ya te registramos..`)
     await gotoFlow(require('./flows/flujoUsuariosRegistrados')) 
