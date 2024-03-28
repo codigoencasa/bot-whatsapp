@@ -571,6 +571,11 @@ class CoreClass extends EventEmitter {
             if (LIST_REGEX.REGEX_EVENT_TEMPLATE.test(body)) {
                 msgToSend = this.flowClass.find(this.generalArgs.listEvents.TEMPLATE) || []
             }
+
+            //todo agregar evento para detectar un vcard
+            if (LIST_REGEX.REGEX_EVENT_CONTACT.test(body)) {
+                msgToSend = this.flowClass.find(this.generalArgs.listEvents.CONTACT) || []
+            }
         }
 
         return exportFunctionsSend(() => sendFlow(msgToSend, from, { forceQueue: true }))
