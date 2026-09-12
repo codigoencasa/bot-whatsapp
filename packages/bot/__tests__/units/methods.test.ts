@@ -143,4 +143,12 @@ test('addAnswer toJson con BUTTONS', () => {
     assert.is(btnB.body, 'BTN_2')
 })
 
+test('addKeyword debe rechazar string vacío', () => {
+    assert.throws(() => addKeyword(''), /empty/i)
+})
+
+test('addKeyword debe rechazar array vacío', () => {
+    assert.throws(() => addKeyword([] as any), /empty/i)
+})
+
 test.run()

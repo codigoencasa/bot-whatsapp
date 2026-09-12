@@ -89,6 +89,17 @@ class MetaProvider extends ProviderClass<MetaInterface> implements MetaInterface
             }
             this.vendor.emit('host', host)
             this.emit('ready')
+
+            this.emit('notice', {
+                title: '🔗 WEBHOOK REQUIRED',
+                instructions: [
+                    'Remember to configure the webhook in your Meta dashboard:',
+                    '- Callback URL: https://<your-domain>/webhook',
+                    '- Verify with your verifyToken',
+                    '- Subscribe to the "messages" field',
+                    'https://builderbot.app/en/providers/meta',
+                ],
+            })
         } catch (err) {
             const errorMap = {
                 'Invalid token': { title: '🔑 TOKEN ERROR', msg: 'Check META_ACCESS_TOKEN in .env' },

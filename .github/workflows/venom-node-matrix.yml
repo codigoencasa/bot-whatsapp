@@ -1,0 +1,57 @@
+name: 'Venom Node Version Matrix'
+
+on:
+    push:
+        paths:
+            - 'packages/provider-venom/**'
+            - '.github/workflows/venom-node-matrix.yml'
+    pull_request:
+        paths:
+            - 'packages/provider-venom/**'
+            - '.github/workflows/venom-node-matrix.yml'
+    workflow_dispatch:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+jobs:
+    test:
+        name: 'Node ${{ matrix.node }} · ${{ matrix.os }}'
+        runs-on: ${{ matrix.os }}
+        timeout-minutes: 20
+        strategy:
+            fail-fast: false
+            matrix:
+                os: [ubuntu-latest]
+                node: ['22.20.0']
+        steps:
+            - name: Checkout
+              uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+              with:
+                  persist-credentials: false
+                  submodules: false
+
+            - name: Set up pnpm
+              uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4
+              with:
+                  version: 9.0.6
+                  run_install: false
+
+            - name: Set up Node.js ${{ matrix.node }}
+              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+              with:
+                  node-version: ${{ matrix.node }}
+                  cache: pnpm
+
+            - name: Install dependencies
+              run: pnpm install --filter @builderbot/provider-venom...
+
+            - name: Build bot dependency
+              run: pnpm --filter @builderbot/bot build
+
+            - name: Run venom provider tests
+              run: pnpm --filter @builderbot/provider-venom test

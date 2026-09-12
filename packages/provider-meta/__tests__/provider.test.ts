@@ -80,6 +80,10 @@ describe('#MetaProvider', () => {
 
             // Assert
             expect(mockEventEmitter.emit).toHaveBeenCalledWith('ready')
+            expect(mockEventEmitter.emit).toHaveBeenCalledWith(
+                'notice',
+                expect.objectContaining({ title: '🔗 WEBHOOK REQUIRED' })
+            )
         })
 
         test('should emit "notice" event with error message when initialization fails', async () => {

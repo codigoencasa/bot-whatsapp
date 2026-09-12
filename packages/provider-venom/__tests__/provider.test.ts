@@ -513,6 +513,7 @@ describe('#VenomProvider', () => {
             const mockedFileStream = { pipe: jest.fn() }
             mockedReadStream.mockReturnValueOnce(mockedFileStream)
             require('fs').createReadStream = mockedReadStream
+            require('fs').existsSync = jest.fn().mockReturnValue(true)
             const req = { params: { idBotName: 'bot123' } }
             const res = { writeHead: jest.fn(), end: jest.fn() }
             const expectedImagePath = 'ruta/esperada/bot123.qr.png'
@@ -523,6 +524,22 @@ describe('#VenomProvider', () => {
             venomProvider['indexHome'](req as any, res as any, mockNext)
             // Assert
             expect(res.writeHead).toHaveBeenCalledWith(200, { 'Content-Type': 'image/png' })
+        })
+
+        test('should return 404 when QR image is not generated', () => {
+            // Arrange
+            require('fs').existsSync = jest.fn().mockReturnValue(false)
+            const req = { params: { idBotName: 'bot123' } }
+            const res = { writeHead: jest.fn(), end: jest.fn() }
+            const expectedImagePath = 'ruta/esperada/bot123.qr.png'
+            const mockedJoin = jest.spyOn(path, 'join')
+            mockedJoin.mockReturnValueOnce(expectedImagePath)
+
+            // Act
+            venomProvider['indexHome'](req as any, res as any, mockNext)
+            // Assert
+            expect(res.writeHead).toHaveBeenCalledWith(404, { 'Content-Type': 'application/json' })
+            expect(res.end).toHaveBeenCalledWith(JSON.stringify({ error: 'QR code not generated yet' }))
         })
     })
 

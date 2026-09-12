@@ -56,5 +56,8 @@
         "sharp": "0.33.3",
         "whatsapp-web.js": "~1.34.2"
     },
+    "engines": {
+        "node": ">=20.12.1"
+    },
     "gitHead": "4c667603733e1262920fbd919fa388e544f7f707"
 }

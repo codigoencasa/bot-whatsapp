@@ -18,7 +18,7 @@ const suiteCase = suite<{ provider: ProviderMock; database: MemoryDB }>('Flujo: 
 suiteCase.before.each(setup)
 suiteCase.after.each(clear)
 
-suiteCase.skip(`Detener el flujo`, async ({ database, provider }) => {
+suiteCase(`Detener el flujo`, async ({ database, provider }) => {
     const MOCK_VALUES = [
         'Bienvenido te envio muchas marcas',
         'Seleccione marca del auto a cotizar, con el *número* correspondiente',
@@ -66,7 +66,7 @@ suiteCase.skip(`Detener el flujo`, async ({ database, provider }) => {
     assert.is(undefined, history[6])
 })
 
-suiteCase.skip(`Detener el flujo flowDynamic`, async ({ database, provider }) => {
+suiteCase(`Detener el flujo flowDynamic`, async ({ database, provider }) => {
     const flow = addKeyword(['hola'])
         .addAnswer('Buenas!', null, async (_, { endFlow, flowDynamic }) => {
             await flowDynamic('Continuamos...')
@@ -92,7 +92,7 @@ suiteCase.skip(`Detener el flujo flowDynamic`, async ({ database, provider }) =>
     assert.is(undefined, history[2])
 })
 
-suiteCase.skip(`flowDynamic con capture`, async (context) => {
+suiteCase(`flowDynamic con capture`, async (context) => {
     const { database, provider } = context
     const MOCK_VALUES = ['¿CUal es tu email?', 'Continuamos....', '¿Cual es tu edad?']
 
@@ -169,7 +169,7 @@ suiteCase.skip(`flowDynamic con capture`, async (context) => {
     assert.is('Puedes pasar', history[11])
 })
 
-suiteCase.skip(`endFlow desde gotoFlow`, async ({ database, provider }) => {
+suiteCase(`endFlow desde gotoFlow`, async ({ database, provider }) => {
     const flow = addKeyword(['hola'])
         .addAnswer('Buenas!', null, async (_, { gotoFlow }) => {
             return gotoFlow(flowUsuario)
@@ -225,7 +225,7 @@ suiteCase.skip(`endFlow desde gotoFlow`, async ({ database, provider }) => {
     assert.is(undefined, history[2])
 })
 
-suiteCase.skip(`endFlow antes de capture`, async ({ database, provider }) => {
+suiteCase(`endFlow antes de capture`, async ({ database, provider }) => {
     const flow = addKeyword(['hola'])
         .addAnswer('Buenas!', null, async (_, { gotoFlow }) => {
             return gotoFlow(flowAction)

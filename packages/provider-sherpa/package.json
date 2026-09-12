@@ -80,5 +80,8 @@
         "typescript": "^5.9.3",
         "whaileys": "6.3.8"
     },
+    "engines": {
+        "node": ">=20.12.1"
+    },
     "gitHead": "4c667603733e1262920fbd919fa388e544f7f707"
 }

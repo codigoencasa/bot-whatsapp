@@ -17,6 +17,10 @@ const addKeyword = <P = any, B = any>(
         throw new Error('DEBE_SER_STRING_ARRAY_REGEX')
     }
 
+    if (keyword.length === 0) {
+        throw new Error('Keyword cannot be empty')
+    }
+
     const parseOptions = (): ActionPropertiesKeyword => {
         const defaultProperties = {
             sensitive: typeof options?.sensitive === 'boolean' ? !!options?.sensitive : false,
